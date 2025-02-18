@@ -8,7 +8,7 @@ import ArticleForm from './components/ArticleForm.vue'
 import ArticleDetail from './components/ArticleDetail.vue'
 
 const routes = [
-    { path: '/', component: ArticleList },
+    { path: '/', component: ArticleList, name: 'list' },
     { path: '/articles/add', component: ArticleForm },
     { path: '/articles/:id', component: ArticleDetail },
   ];
