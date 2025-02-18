@@ -1,10 +1,9 @@
 <script setup>
 import { ref } from 'vue';
+import { ARTICLES_API } from '../const/config.js';
 
 const title = defineModel('title');
 const description = defineModel('description');
-
-const ARTICLES_API = 'https://6797ded3c2c861de0c6e4858.mockapi.io/articles';
 
 const hasError = ref(false);
 
