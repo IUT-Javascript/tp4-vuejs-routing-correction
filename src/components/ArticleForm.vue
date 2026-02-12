@@ -1,63 +1,60 @@
 <script setup>
-import { ref } from 'vue';
-import { ARTICLES_API } from '../const/config.js';
+import { COLOR_ERROR } from "@/constants/colors";
+import { reactive, ref } from "vue";
+import { addArticle } from '../services/articleServices';
+import { useRouter } from 'vue-router';
 
-const title = defineModel('title');
-const description = defineModel('description');
+const router = useRouter();
+const error = ref('');
 
-const hasError = ref(false);
+const form = reactive({
+  title: '',
+  description: ''
+});
 
-function addArticle(){
-    if(!title.value || !description.value){
-        hasError.value = true;
+function handleSubmit() {
+    console.log('Form submitted!', form);
+    error.value = '';
+
+    if(form.title.length < 3) {
+        error.value = 'Title must be at least 3 characters long.';
+        return;
+    }
+    
+    if(form.description.length < 10) {
+        error.value = 'Description must be at least 10 characters long.';
         return;
     }
 
+    // On émet un événement personnalisé 'addArticle' avec les données du formulaire 
     const article = {
-        title: title.value,
-        description: description.value
+        title: form.title,
+        description: form.description
     }
 
-    console.log('ArticleForm.addArticle', article);
-    postArticleToApi(article);
+    addArticle(article);
 
-    resetForm();
-}
-
-function postArticleToApi(article){    
-  fetch(ARTICLES_API,  {
-      method: "POST",
-      headers: {
-      "Content-Type": "application/json",
-      },
-      body: JSON.stringify(article)
-  }).then();
-    
-}
-
-function resetForm(){
-    title.value = '';
-    description.value = '';
-    hasError.value = false; 
+    // router.push('/');
+    router.push({ name: 'home' });
 }
 </script>
 
 <template>
-    <div v-if="hasError">
-        All fields are required !
-    </div>
+    <p v-if="error" :style="{ color: COLOR_ERROR }">{{ error }}</p>
 
-    <form @submit.prevent="addArticle">
+    <form @submit.prevent="handleSubmit">
         <div>
-            <label>Title</label>
-            <input type="text" v-model="title"/>
+            <label>Book title</label><br/>
+            <input type="text" v-model="form.title"/>
         </div>
 
         <div>
-            <label>Description</label>
-            <textarea v-model="description"></textarea>
+            <label>Book description</label><br/>
+            <textarea v-model="form.description"></textarea>
         </div>
 
-        <button type="submit">Add</button>
-    </form>
+        <input type="submit" value="Submit" />
+    </form> 
 </template>
+
+<style scoped></style>

@@ -1,10 +1,10 @@
 <script setup>
-import { RouterLink } from 'vue-router';
 </script>
 
 <template>
     <nav>
-        <RouterLink to="/">Articles</RouterLink>
-        <RouterLink to="/articles/add">Add an article</RouterLink>
+        <!-- Utilisation du router-link pour vérifier l'existence des routes -->
+        <router-link to="/">Home</router-link>
+        <router-link to="/articles/add">Add Article</router-link>
     </nav>
 </template>
