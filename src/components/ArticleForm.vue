@@ -1,15 +1,18 @@
 <script setup>
 import { COLOR_ERROR } from "@/constants/colors";
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { addArticle } from '../services/articleServices';
+import { getUsers } from '../services/userService';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const error = ref('');
+const users = ref([]);
 
 const form = reactive({
   title: '',
-  description: ''
+  description: '',
+  userId: 0
 });
 
 function handleSubmit() {
@@ -25,11 +28,17 @@ function handleSubmit() {
         error.value = 'Description must be at least 10 characters long.';
         return;
     }
+    
+    if(form.userId <= 0) {
+        error.value = 'Author must be selected.';
+        return;
+    }
 
     // On émet un événement personnalisé 'addArticle' avec les données du formulaire 
     const article = {
         title: form.title,
-        description: form.description
+        description: form.description,
+        userId: form.userId
     }
 
     addArticle(article);
@@ -37,6 +46,10 @@ function handleSubmit() {
     // router.push('/');
     router.push({ name: 'home' });
 }
+
+onMounted(async () => {
+    users.value = await getUsers();
+});
 </script>
 
 <template>
@@ -51,6 +64,16 @@ function handleSubmit() {
         <div>
             <label>Book description</label><br/>
             <textarea v-model="form.description"></textarea>
+        </div>
+
+        <div>
+            <label>Author</label><br/>
+            <select v-model="form.userId">
+                <option value="0">Select an author</option>
+                <option v-for="user in users" :key="user.id" :value="user.id">
+                    {{ user.name }}
+                </option>
+            </select>
         </div>
 
         <input type="submit" value="Submit" />
