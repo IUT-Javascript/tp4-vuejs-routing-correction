@@ -32,6 +32,21 @@ export async function getArticles() {
     //     }); 
 }
 
+export async function getArticleById(id) {
+    const response = await fetch(url + '/' + id);
+    if(!response.ok) {
+        throw new Error('Article not found');
+    }
+    const article = await response.json();
+
+    return {
+        id: article.id,
+        userId: article.userId,
+        title: article.title,
+        description: article.body
+    };
+}
+
 export function addArticle(article) {
     articles.value.unshift(article);
     addArticleToApi(article).then();

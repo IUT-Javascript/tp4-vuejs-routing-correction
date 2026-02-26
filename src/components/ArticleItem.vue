@@ -27,7 +27,11 @@ function handleDeleteArticle() {
 
 <template>
     <article>
-        <h3>{{ title }}</h3>
+        <h3>          
+          <router-link :to="{ name: 'article', params: { idArticle: props.idArticle } }">
+            {{ title }}
+          </router-link>
+        </h3>
         <p>{{ description }}</p>
         <button @click="handleDeleteArticle">Delete</button>
     </article>
